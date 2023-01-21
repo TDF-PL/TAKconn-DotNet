@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WOT.TAK.Connection", "WOT.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WOT.TAK.Client", "WOT.TAK.Client\WOT.TAK.Client.csproj", "{0424850E-C9CC-4B83-BC44-F4C062095E34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WOT.TAK.Connection.Tests", "WOT.TAK.Connection.Tests\WOT.TAK.Connection.Tests.csproj", "{C401893A-8325-4FDB-83B5-47D423E230F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C401893A-8325-4FDB-83B5-47D423E230F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C401893A-8325-4FDB-83B5-47D423E230F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C401893A-8325-4FDB-83B5-47D423E230F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C401893A-8325-4FDB-83B5-47D423E230F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
