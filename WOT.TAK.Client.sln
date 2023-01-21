@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WOT.TAK.Connection", "WOT.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WOT.TAK.Client", "WOT.TAK.Client\WOT.TAK.Client.csproj", "{0424850E-C9CC-4B83-BC44-F4C062095E34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WOT.TAK.Integrity", "WOT.TAK.Integrity\WOT.TAK.Integrity.csproj", "{1E295E2D-EE4F-4752-8F28-370F0321095B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0424850E-C9CC-4B83-BC44-F4C062095E34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E295E2D-EE4F-4752-8F28-370F0321095B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E295E2D-EE4F-4752-8F28-370F0321095B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E295E2D-EE4F-4752-8F28-370F0321095B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E295E2D-EE4F-4752-8F28-370F0321095B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
