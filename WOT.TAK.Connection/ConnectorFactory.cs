@@ -17,7 +17,7 @@ public class ConnectorFactory
             _settings.ServerUrl,
             _settings.ServerPort,
             _settings.CotResponsesDirPath);
-           // new SocketFactory(_settings));
+        // new SocketFactory(_settings));
     }
 
     public TAKServerConnector GetTAKServerConnector()
@@ -46,12 +46,13 @@ public class ConnectorFactory
             _settings.ServerUrl,
             _settings.ServerPort);
     }
+
     public TAKServerConnector GetTCPConnector()
     {
         return new TCPConnector(
             _settings.ServerUrl,
             _settings.ServerPort,
             _settings.CotResponsesDirPath);
-         //   new SocketFactory(_settings));
+        //   new SocketFactory(_settings));
     }
 }

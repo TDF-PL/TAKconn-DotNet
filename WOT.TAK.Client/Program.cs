@@ -1,41 +1,37 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using System.Net.Security;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using WOT.TAK.Connection;
 
 namespace WOT.TAK.Client;
 
 public class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         using var host = CreateHostBuilder().Build();
 
         // Invoke Worker
-        using IServiceScope serviceScope = host.Services.CreateScope();
-        IServiceProvider provider = serviceScope.ServiceProvider;
+        using var serviceScope = host.Services.CreateScope();
+        var provider = serviceScope.ServiceProvider;
         var client = provider.GetRequiredService<Client>();
         client.DoWork();
 
         host.Run();
     }
 
-    static IHostBuilder CreateHostBuilder()
+    private static IHostBuilder CreateHostBuilder()
     {
         return Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration((hostingContext, configuration) =>
             {
-                configuration.AddJsonFile("appsettings.json",false, true);
+                configuration.AddJsonFile("appsettings.json", false, true);
             })
             .ConfigureServices((builder, services) =>
             {
                 services.AddSingleton<Client>()
-                .AddSingleton<ConnectorFactory>()
-                .Configure<ConnectorSettings>(builder.Configuration);
+                    .AddSingleton<ConnectorFactory>()
+                    .Configure<ConnectorSettings>(builder.Configuration);
             });
     }
 }
@@ -52,7 +48,8 @@ internal class Client
 
     public void DoWork()
     {
-        var connector = new CertificateConnector("212.160.99.185", "8089", @"cot\responses", @"cot\cert\user.p12", @"atakatak");
+        var connector = new CertificateConnector("212.160.99.185", "8089", @"cot\responses", @"cot\cert\user.p12",
+            @"atakatak");
         connector.Connect();
         connector.SendFile("cot/messages/msg1.cot");
         connector.SendFile("cot/messages/msg2.cot");
@@ -61,6 +58,4 @@ internal class Client
         connector.Close();
         Console.WriteLine("Sent");
     }
-   
-
 }

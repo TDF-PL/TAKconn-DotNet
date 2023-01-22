@@ -3,122 +3,119 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace WOT.TAK.Connection
+namespace WOT.TAK.Connection;
+
+public class CertificateConnector : TAKServerConnector
 {
-    public class CertificateConnector : TAKServerConnector
+    protected SslStream _authConnection;
+    protected string _certPass;
+    protected string _certPath;
+    protected string _cotResponsesDirPath;
+    protected string _serverPort;
+    protected string _serverUrl;
+
+    public CertificateConnector(
+        string serverUrl,
+        string serverPort,
+        string cotResponsesDirPath,
+        string certPath,
+        string certPass)
     {
-        protected string _serverUrl;
-        protected string _serverPort;
-        protected string _cotResponsesDirPath;
-        protected SslStream _authConnection;
-        protected string _certPath;
-        protected string _certPass;
-        public CertificateConnector(
-            string serverUrl, 
-            string serverPort, 
-            string cotResponsesDirPath, 
-            string certPath, 
-            string certPass)
-        {
-            _serverUrl = serverUrl;
-            _serverPort = serverPort;
-            _cotResponsesDirPath = cotResponsesDirPath;
-            _certPath = certPath;
-            _certPass = certPass;
-        }
-        public void Close()
-        {
-            _authConnection.Close();
-        }
-        public void Connect()
-        {
-            TCPConnector connector = new TCPConnector(_serverUrl, _serverPort, _cotResponsesDirPath);
-            connector.GetSocket().Connect(_serverUrl, Int32.Parse(_serverPort));
+        _serverUrl = serverUrl;
+        _serverPort = serverPort;
+        _cotResponsesDirPath = cotResponsesDirPath;
+        _certPath = certPath;
+        _certPass = certPass;
+    }
 
-            FileStream fileStream = File.OpenRead(_certPath);
-            byte[] buffer = new byte[fileStream.Length];
-            int bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
+    public void Close()
+    {
+        _authConnection.Close();
+    }
 
-            X509Certificate2 clientCertificate = new X509Certificate2(buffer, _certPass);
-            X509Certificate2Collection certificateCollection = new X509Certificate2Collection(clientCertificate);
+    public void Connect()
+    {
+        var connector = new TCPConnector(_serverUrl, _serverPort, _cotResponsesDirPath);
+        connector.GetSocket().Connect(_serverUrl, int.Parse(_serverPort));
 
-            _authConnection = new SslStream(
-                    connector.GetSocket().GetStream(),
-                    false,
-                    new RemoteCertificateValidationCallback(ValidateServerCertificate),
-                    new LocalCertificateSelectionCallback(SelectUserCertificate));
+        var fileStream = File.OpenRead(_certPath);
+        var buffer = new byte[fileStream.Length];
+        var bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
 
-            // Funkcja powodująca problemy
-            _authConnection.AuthenticateAsClient(_serverUrl, certificateCollection, SslProtocols.Tls13, false);
-            connector.SetStream(_authConnection);
-            connector.Connect();
-        }
-        public void SendFile(string path)
+        var clientCertificate = new X509Certificate2(buffer, _certPass);
+        var certificateCollection = new X509Certificate2Collection(clientCertificate);
+
+        _authConnection = new SslStream(
+            connector.GetSocket().GetStream(),
+            false,
+            ValidateServerCertificate,
+            SelectUserCertificate);
+
+        // Funkcja powodująca problemy
+        _authConnection.AuthenticateAsClient(_serverUrl, certificateCollection, SslProtocols.Tls13, false);
+        connector.SetStream(_authConnection);
+        connector.Connect();
+    }
+
+    public void SendFile(string path)
+    {
+        try
         {
-            try
+            using (var sr = new StreamReader(path))
             {
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        _authConnection.Write(Encoding.ASCII.GetBytes(line));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                string line;
+                while ((line = sr.ReadLine()) != null) _authConnection.Write(Encoding.ASCII.GetBytes(line));
             }
         }
-        private X509Certificate2 SelectUserCertificate(
-            object sender,
-            string targetHost,
-            X509CertificateCollection collection,
-            X509Certificate remoteCert,
-            string[] acceptableIssuers)
+        catch (Exception e)
         {
-            FileStream fileStream = File.OpenRead(_certPath);
-            byte[] buffer = new byte[fileStream.Length];
-            int bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
-
-            X509Certificate2 clientCertificate = new X509Certificate2(buffer, _certPass);
-            X509Certificate2Collection certificateCollection = new X509Certificate2Collection(clientCertificate);
-            return clientCertificate;
+            Console.WriteLine(e.Message);
         }
-        private bool ValidateServerCertificate(
-             object sender,
-             X509Certificate certificate,
-             X509Chain chain,
-             SslPolicyErrors sslPolicyErrors)
-        {
-            FileStream fileStream = File.OpenRead(_certPath);
-            byte[] buffer = new byte[fileStream.Length];
-            int bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
+    }
 
-            X509Certificate2 clientCertificate = new X509Certificate2(buffer, _certPass);
-            X509Certificate2Collection certificateCollection = new X509Certificate2Collection(clientCertificate);
-            try
-            {
-                string clientCertBytes = certificate.Issuer;
-                string serverCertBytes = clientCertificate.Issuer;
-                if (clientCertBytes.Length != serverCertBytes.Length)
-                {
+    private X509Certificate2 SelectUserCertificate(
+        object sender,
+        string targetHost,
+        X509CertificateCollection collection,
+        X509Certificate remoteCert,
+        string[] acceptableIssuers)
+    {
+        var fileStream = File.OpenRead(_certPath);
+        var buffer = new byte[fileStream.Length];
+        var bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
+
+        var clientCertificate = new X509Certificate2(buffer, _certPass);
+        var certificateCollection = new X509Certificate2Collection(clientCertificate);
+        return clientCertificate;
+    }
+
+    private bool ValidateServerCertificate(
+        object sender,
+        X509Certificate certificate,
+        X509Chain chain,
+        SslPolicyErrors sslPolicyErrors)
+    {
+        var fileStream = File.OpenRead(_certPath);
+        var buffer = new byte[fileStream.Length];
+        var bytesRead = fileStream.Read(buffer, 0, (int)fileStream.Length);
+
+        var clientCertificate = new X509Certificate2(buffer, _certPass);
+        var certificateCollection = new X509Certificate2Collection(clientCertificate);
+        try
+        {
+            var clientCertBytes = certificate.Issuer;
+            var serverCertBytes = clientCertificate.Issuer;
+            if (clientCertBytes.Length != serverCertBytes.Length)
+                throw new Exception("Client/server certificates do not match.");
+            for (var i = 0; i < clientCertBytes.Length; i++)
+                if (clientCertBytes[i] != serverCertBytes[i])
                     throw new Exception("Client/server certificates do not match.");
-                }
-                for (int i = 0; i < clientCertBytes.Length; i++)
-                {
-                    if (clientCertBytes[i] != serverCertBytes[i])
-                    {
-                        throw new Exception("Client/server certificates do not match.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-            return true;
         }
+        catch (Exception ex)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,111 +1,107 @@
-using System;
-using System.IO;
 using System.Net.Sockets;
 
-namespace WOT.TAK.Connection
+namespace WOT.TAK.Connection;
+
+public class TCPConnector : TAKServerConnector
 {
-    public class TCPConnector : TAKServerConnector
+    private readonly int _port;
+    private readonly string _responseStoragePath;
+    private readonly TcpClient _socket;
+    private readonly string _url;
+    protected StreamReader _input;
+    private Thread _listener;
+    protected StreamWriter _output;
+    private bool _run;
+    private Stream _stream;
+
+    public TCPConnector(string url, string port, string responseStoragePath)
     {
-        private String _url;
-        private int _port;
-        private String _responseStoragePath;
-        private TcpClient _socket;
-        protected StreamReader _input;
-        protected StreamWriter _output;
-        private Stream _stream;
-        private Thread _listener;
-        private bool _run;
-        public TCPConnector(String url, String port, String responseStoragePath)
+        _url = url;
+        _port = int.Parse(port);
+        _responseStoragePath = responseStoragePath;
+        _socket = new TcpClient();
+        _run = true;
+    }
+
+    public void SendFile(string fileName)
+    {
+        try
         {
-            _url = url;
-            _port = Int32.Parse(port);
-            _responseStoragePath = responseStoragePath;
-            _socket = new TcpClient();
-            _run = true;
+            using (var sr = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null) _output.WriteLine(line);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    public void Connect()
+    {
+        try
+        {
+            if (!_socket.Connected)
+                _socket.Connect(_url, _port);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
 
-        public void SendFile(string fileName)
-        {
+        if (_stream == null) _stream = _socket.GetStream();
+        _output = new StreamWriter(_stream);
+        _input = new StreamReader(_stream);
+        _socket.ReceiveTimeout = 1000;
+        _listener = new Thread(ResponseListener);
+        _listener.IsBackground = true;
+        _listener.Start();
+    }
+
+    public void Close()
+    {
+        _run = false;
+        Thread.Sleep(200);
+        _output.Close();
+        _input.Close();
+        _socket.Close();
+    }
+
+    public void SetStream(Stream stream)
+    {
+        _stream = stream;
+    }
+
+    private void ResponseListener()
+    {
+        string line;
+        while (_run)
             try
             {
-                using (StreamReader sr = new StreamReader(fileName))
+                line = _input.ReadLine();
+                using (var sw = File.CreateText(_responseStoragePath + "/" +
+                                                DateTimeOffset.Now.ToUnixTimeMilliseconds() + ".cot"))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        _output.WriteLine(line);
-                    }
+                    sw.WriteLine(line);
                 }
             }
-            catch (Exception e)
+            catch (SocketException e)
             {
-                Console.WriteLine(e.Message);
             }
-        }
+            catch (ObjectDisposedException e)
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+    }
 
-        public void SetStream(Stream stream)
-        {
-            _stream = stream;
-        }
-
-        public void Connect()
-        {
-            try
-            {
-                if(!_socket.Connected)
-                    _socket.Connect(_url, _port);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            if (_stream == null)
-            {
-                _stream = _socket.GetStream();
-            }
-            _output = new StreamWriter(_stream);
-            _input = new StreamReader(_stream);
-            _socket.ReceiveTimeout = 1000;
-            _listener = new Thread(new ThreadStart(ResponseListener));
-            _listener.IsBackground = true;
-            _listener.Start();
-        }
-        private void ResponseListener()
-        {
-            string line;
-            while(_run)
-            {
-                try
-                {
-                    line = _input.ReadLine();
-                    using (StreamWriter sw = File.CreateText(_responseStoragePath + "/" + DateTimeOffset.Now.ToUnixTimeMilliseconds() + ".cot"))
-                    {
-                        sw.WriteLine(line);
-                    }
-                }
-                catch (SocketException e)
-                {
-                    continue;
-                }
-                catch (ObjectDisposedException e)
-                {
-                    Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine(ex.Message);
-                }
-            }
-        }
-        public void Close()
-        {
-            _run = false;
-            Thread.Sleep(200);
-            _output.Close();
-            _input.Close();
-            _socket.Close();
-        }
-
-        public TcpClient GetSocket() { return _socket; }
+    public TcpClient GetSocket()
+    {
+        return _socket;
     }
 }

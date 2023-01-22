@@ -1,30 +1,22 @@
 using NUnit.Framework;
-using WOT.TAK.Connection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WOT.TAK.Connection.Tests
+namespace WOT.TAK.Connection.Tests;
+
+[TestFixture]
+public class PlainConnectorTests
 {
-
-    [TestFixture]
-    public class PlainConnectorTests
+    [SetUp]
+    public void SetUp()
     {
-        private TAKServerConnector _connector;
+        _connector = new ConnectorFactory(null).GetPlainConnector();
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _connector = new ConnectorFactory(null).GetPlainConnector();
-        }
+    private TAKServerConnector _connector;
 
-        [Test]
-        public void GetPlainConnector_Invalid()
-        {
-            _connector.Connect();
-            Assert.NotNull(_connector);
-        }
+    [Test]
+    public void GetPlainConnector_Invalid()
+    {
+        _connector.Connect();
+        Assert.NotNull(_connector);
     }
 }
