@@ -7,6 +7,8 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using WOT.TAK.Connection;
 
+namespace WOT.TAK.Client;
+
 public class Program
 {
     static void Main(string[] args)
