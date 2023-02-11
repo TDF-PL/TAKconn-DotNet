@@ -7,6 +7,9 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<Target Name="Test">
+	</Target>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
@@ -20,10 +23,10 @@
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="cot\cert\truststore.p12">
+		<None Update="cert-dev\truststore.p12">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="cot\cert\user.p12">
+		<None Update="cert-dev\charlie.p12">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="cot\messages\msg1.cot">

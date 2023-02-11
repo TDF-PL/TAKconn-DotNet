@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WOT.TAK.Client": {
+      "commandName": "Project",
+      "workingDirectory": "."
+    }
+  }
+}

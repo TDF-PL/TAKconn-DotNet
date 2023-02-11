@@ -52,7 +52,7 @@ public class CertificateConnector : TAKServerConnector
             SelectUserCertificate);
 
         // Funkcja powodująca problemy
-        _authConnection.AuthenticateAsClient(_serverUrl, certificateCollection, SslProtocols.Tls13, false);
+        _authConnection.AuthenticateAsClient(_serverUrl, certificateCollection, SslProtocols.Tls12, false);
         connector.SetStream(_authConnection);
         connector.Connect();
     }

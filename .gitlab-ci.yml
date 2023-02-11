@@ -1,0 +1,13 @@
+stages:
+  - build
+  - test
+
+build-code-job:
+  stage: build
+  script:
+    - msbuild
+
+test-code-job:
+  stage: test
+  script:
+    - msbuild /t:test

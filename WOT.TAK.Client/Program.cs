@@ -48,8 +48,7 @@ internal class Client
 
     public void DoWork()
     {
-        var connector = new CertificateConnector("212.160.99.185", "8089", @"cot\responses", @"cot\cert\user.p12",
-            @"atakatak");
+        var connector = _connectorFactory.GetSSLConnector();
         connector.Connect();
         connector.SendFile("cot/messages/msg1.cot");
         connector.SendFile("cot/messages/msg2.cot");
