@@ -6,9 +6,9 @@ public class ConnectorFactory
 {
     private readonly ConnectorSettings _settings;
 
-    public ConnectorFactory(IOptionsSnapshot<ConnectorSettings> settings)
+    public ConnectorFactory(ConnectorSettings settings)
     {
-        _settings = settings.Value;
+        _settings = settings;
     }
 
     public TAKServerConnector GetSSLConnector()
