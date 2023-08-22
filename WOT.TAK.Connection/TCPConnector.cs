@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Sockets;
 
 namespace WOT.TAK.Connection;
@@ -76,15 +77,15 @@ public class TCPConnector : TAKServerConnector
 
     private void ResponseListener()
     {
-        string line;
+        string xml;
         while (_run)
             try
             {
-                line = _input.ReadLine();
+                xml = EventReader.readFrom(_stream);
                 using (var sw = File.CreateText(_responseStoragePath + "/" +
                                                 DateTimeOffset.Now.ToUnixTimeMilliseconds() + ".cot"))
                 {
-                    sw.WriteLine(line);
+                    sw.WriteLine(xml);
                 }
             }
             catch (SocketException e)

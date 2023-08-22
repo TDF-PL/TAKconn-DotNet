@@ -59,7 +59,7 @@ public class SSLConnector : TAKServerConnector
             file.Close();
         }
 
-        var data = Encoding.ASCII.GetBytes(msg.ToString());
+        var data = Encoding.UTF8.GetBytes(msg.ToString());
         _sslStream.Write(data);
         _sslStream.Flush();
         var serverMessage = ReadMessage(_sslStream);

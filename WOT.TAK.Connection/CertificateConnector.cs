@@ -64,7 +64,7 @@ public class CertificateConnector : TAKServerConnector
             using (var sr = new StreamReader(path))
             {
                 string line;
-                while ((line = sr.ReadLine()) != null) _authConnection.Write(Encoding.ASCII.GetBytes(line));
+                while ((line = sr.ReadLine()) != null) _authConnection.Write(Encoding.UTF8.GetBytes(line));
             }
         }
         catch (Exception e)

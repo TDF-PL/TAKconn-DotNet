@@ -39,7 +39,7 @@ public class UDPConnector : TAKServerConnector
             file.Close();
         }
 
-        var data = Encoding.ASCII.GetBytes(msg.ToString());
+        var data = Encoding.UTF8.GetBytes(msg.ToString());
         _socket.Send(data, data.Length);
     }
 
