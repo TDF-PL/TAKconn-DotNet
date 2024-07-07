@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WOT.TAK.Connection.TestCommon\WOT.TAK.Connection.TestCommon.csproj" />
+      <ProjectReference Include="..\WOT.TAK.Connection\WOT.TAK.Connection.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ObjectDumper.NET" Version="4.2.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\Certificates\TakDev\charlie.p12">
+        <Link>Certificates\TakDev\charlie.p12</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Certificates\TakDev\truststore-int-ca.p12">
+        <Link>Certificates\TakDev\truststore-int-ca.p12</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Certificates\TakTest\truststore-DWOT-TAK-CA-INT.p12">
+        <Link>Certificates\TakTest\truststore-DWOT-TAK-CA-INT.p12</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Certificates\TakTest\zintegrowane24.p12">
+        <Link>Certificates\TakTest\zintegrowane24.p12</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>

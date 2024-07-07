@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+		<LangVersion>default</LangVersion>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
+	</PropertyGroup>
+
+	<Target Name="GenerateXsdClasses" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet xscgen -v -n WOT.TAK.Connection.DTOs $(ProjectDir)Protocol\Xml\Wot\**\*.xsd -o $(ProjectDir)Protocol\Xml\DTOs" />
+	</Target>
+
+	<ItemGroup>
+		<PackageReference Include="LanguageExt.Core" Version="4.4.8" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="../stylecop.json" Link="stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Protocol\Xml\DTOs\" />
+	</ItemGroup>
+
+</Project>
