@@ -1,24 +1,25 @@
 ﻿using Microsoft.Extensions.Configuration;
+using WOT.TAK.Connection.TestCommon.Configuration;
+using static LanguageExt.Prelude;
 
 namespace WOT.TAK.Connection.TestApp;
 
 internal static class Settings
 {
-    public static ConnectorSettings Load(UserOption userOption)
+    public static ConnectorSettings Load(Protocol protocol)
     {
-        var sectionName = userOption switch
-        {
-            UserOption.Tcp => "TCPConnector",
-            UserOption.Ssl => "SSLConnectorTakTest",
-            _ => throw new ArgumentOutOfRangeException(nameof(userOption), userOption, string.Empty)
-        };
-
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
+            .AddUserSecrets<Program>()
+            .Build().GetSection("TestServers").Get<TestServer[]>();
 
-        var settings = configuration.GetSection(sectionName).Get<ConnectorSettings>();
-        return settings!;
+        var connectorSettings = Optional(configuration)
+            .IfNone(() => throw new KeyNotFoundException("No servers found in configuration."))
+            .Find(server => server.SupportedProtocols.Contains(protocol))
+            .Map(server => server.ConnectorSettings)
+            .IfNone(() => throw new KeyNotFoundException($"No {protocol} server found in configuration."));
+
+        return connectorSettings;
     }
 }

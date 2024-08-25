@@ -7,8 +7,8 @@ public sealed class ConnectorFactory(ConnectorSettings settings)
         return new SslConnector(
             settings.ServerUrl,
             settings.ServerPort,
-            settings.KeyStorePath,
-            settings.KeyStorePassword);
+            settings.ClientCertificatePath,
+            settings.ClientCertificatePassword);
     }
 
     public ITakServerConnector CreateTakServerConnector()

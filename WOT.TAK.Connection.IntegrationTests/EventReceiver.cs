@@ -14,7 +14,7 @@ internal sealed class EventReceiver(ITestOutputHelper errorOutput) : IEventRecei
         this.events.Enqueue(anEvent);
     }
 
-    public void Error(string message)
+    public void OnError(string message)
     {
         errorOutput.WriteLine(message);
     }

@@ -55,6 +55,4 @@ public class ConnectorTests(ITestOutputHelper output)
         await bravoEvents.Events.Should()
             .EventuallyContain(anEvent => anEvent.Uid != null, TimeSpan.FromSeconds(10));
     }
-
-    // method this
 }

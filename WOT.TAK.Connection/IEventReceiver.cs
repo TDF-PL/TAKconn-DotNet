@@ -6,5 +6,5 @@ public interface IEventReceiver
 {
     public void Receive(Event anEvent);
 
-    public void Error(string message);
+    public void OnError(string message);
 }

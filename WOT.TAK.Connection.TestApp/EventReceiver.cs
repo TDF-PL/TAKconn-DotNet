@@ -16,7 +16,7 @@ internal class EventReceiver : IEventReceiver
         Console.WriteLine();
     }
 
-    public void Error(string message)
+    public void OnError(string message)
     {
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"Error: {message}");

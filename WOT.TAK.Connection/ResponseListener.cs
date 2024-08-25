@@ -57,7 +57,7 @@ internal class ResponseListener : IDisposable
             }
             catch (InvalidOperationException e)
             {
-                eventReceiver.Error(e.ToString());
+                eventReceiver.OnError(e.ToString());
             }
             catch (TaskCanceledException)
             {

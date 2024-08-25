@@ -34,7 +34,7 @@ public static class FluentAssertionExtensions
 
             const int poolingFrequency = 100;
             totalWaitTime += TimeSpan.FromMilliseconds(poolingFrequency);
-            await Task.Delay(poolingFrequency);
+            await Task.Delay(poolingFrequency).ConfigureAwait(false);
         } while (totalWaitTime < timeout);
 
         scope.FailWith(

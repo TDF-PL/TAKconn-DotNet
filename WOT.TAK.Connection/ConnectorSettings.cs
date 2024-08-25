@@ -8,13 +8,13 @@ public record ConnectorSettings
 
     public bool CertificateVerification { get; init; } = true;
 
-    public string TrustStorePath { get; init; } = string.Empty;
+    public string CertificateAuthorityPath { get; init; } = string.Empty;
 
-    public string TrustStorePassword { get; init; } = string.Empty;
+    public string CertificateAuthorityPassword { get; init; } = string.Empty;
 
-    public string KeyStorePath { get; init; } = string.Empty;
+    public string ClientCertificatePath { get; init; } = string.Empty;
 
-    public string KeyStorePassword { get; init; } = string.Empty;
+    public string ClientCertificatePassword { get; init; } = string.Empty;
 
     public string Login { get; init; } = string.Empty;
 
